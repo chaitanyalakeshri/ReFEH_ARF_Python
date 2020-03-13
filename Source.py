@@ -17,7 +17,5 @@ if D<=12:
     R=np.exp( (c*y + d1) + np.log(D) +(e*y) + f )
 elif 12<D<=48:
     R=np.exp()
- vcv cv /''
 
 
- 
