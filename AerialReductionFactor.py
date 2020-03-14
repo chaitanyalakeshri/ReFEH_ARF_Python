@@ -14,6 +14,6 @@ def ARF(A):
         b=0.0627*A**0.254
     else True:
     return 1-b*D**(-a)
-
+    
 
 print(ARF(20))
