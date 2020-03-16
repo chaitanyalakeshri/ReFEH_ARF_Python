@@ -1,3 +1,4 @@
+from mpl_toolkits import mplot3d
 import matplotlib.pyplot as plt
 import numpy as np
 #D is design storm duration
@@ -5,7 +6,8 @@ import numpy as np
 D=5
 
 #area A in Km2
-def ARF(A):
+def ARF(aa):
+    A=aa
     if A<=20:
         a=0.40-(0.0208*np.log(4.6-(np.log(A))))
         b=0.0394*A**0.354
@@ -26,15 +28,28 @@ def ARF(A):
 
     return 1-b*D**(-a)
 
-print(ARF(1))
-print(ARF(100))
 
-area=np.arange(1,1001,1)
-ARF_mat=np.zeros_like(area,dtype=float)
-count=0
-for i in area:
-    ARF_mat[count]=ARF(i)
-    count=count+1
-#print(ARF_mat)
-plt.plot(area,ARF_mat)
+
+
+x=np.arange(-10,11,0.1)
+y=x.copy().T
+
+Z=np.zeros((x.shape[0],y.shape[0]))
+xcount=0
+for i in x:
+    ycount=0
+    for j in y:
+        if i==0 and j==0:
+            Z[xcount,ycount]=1
+        else:
+            Z[xcount,ycount]=ARF((np.sqrt((i**2)+(j**2))))
+        ycount=ycount+1
+    xcount=xcount+1
+
+X,Y=np.meshgrid(x,y)
+
+
+fig = plt.figure()
+ax = plt.axes(projection='3d')
+ax.plot_surface(X, Y, Z,cmap='viridis', edgecolor='none')
 plt.show()
