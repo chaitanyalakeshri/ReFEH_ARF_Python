@@ -1,11 +1,12 @@
-from mpl_toolkits import mplot3d
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib import cm
+from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import matplotlib.pyplot as plt
 import numpy as np
-#D is design storm duration
-#D= Tp*(1+(SAAR/1000))
-D=5
+from mpl_toolkits import mplot3d
 
-#area A in Km2
+
+D=5
 def ARF(aa):
     A=aa
     if A<=20:
@@ -32,7 +33,7 @@ def ARF(aa):
 
 
 x=np.arange(-10,11,0.1)
-y=x.copy().T
+y=x.copy()
 
 Z=np.zeros((x.shape[0],y.shape[0]))
 xcount=0
@@ -41,15 +42,32 @@ for i in x:
     for j in y:
         if i==0 and j==0:
             Z[xcount,ycount]=1
+        elif (np.sqrt((i**2)+(j**2)))<10:
+            area= (np.pi)*((i**2)+(j**2))
+            Z[xcount,ycount]=ARF(area)
+            
         else:
-            Z[xcount,ycount]=ARF((np.sqrt((i**2)+(j**2))))
+            Z[xcount,ycount]=np.nan #ARF((np.pi)*10*10)
         ycount=ycount+1
     xcount=xcount+1
 
 X,Y=np.meshgrid(x,y)
 
 
+
+
+
+
 fig = plt.figure()
-ax = plt.axes(projection='3d')
-ax.plot_surface(X, Y, Z,cmap='viridis', edgecolor='none')
+ax = fig.gca(projection='3d')
+
+surf = ax.plot_surface(X, Y, Z,cmap='viridis',vmin=0.85, vmax=1)
+ax.set_xlabel('Dist from origin(km)')
+ax.set_ylabel('Dist from origin(km)')
+ax.set_zlabel('ARF (Aerial Reduction Factor')
+#plt.zlabel("ARF (Aerial Reduction Factor")
+#ax.set_zlim(-1.01, 1.01)
+
+fig.colorbar(surf, shrink=0.5, aspect=5)
+
 plt.show()
